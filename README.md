@@ -19,3 +19,6 @@ chan g cpp fuga
 chan g c fuga
 ```
 - generate `uta8alib/src/rust/fuga/main.cpp`
+
+## License
+MIT
