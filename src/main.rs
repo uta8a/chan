@@ -49,41 +49,69 @@ fn main() {
             println!("Error: cannot found directory uta8alib/");
             panic!();
         }
+        let mut test_path = path.clone();
         path.push("src");
+        test_path.push("test");
         match gen {
             "g" | "generate" => {
                 match lang {
                     "r" | "rust" => {
                         path.push("rust");
                         path.push(args[3].as_str());
+                        test_path.push("rust");
+                        test_path.push(args[3].as_str());
                         match fs::create_dir(path.clone()) {
                             Ok(_) => {},
                             Err(e) => {
                                 println!("{}", e);
-                                println!("Error: Folder already Exists");
+                                println!("Error: folder(src) already Exists");
+                                panic!();
+                            }
+                        }
+                        match fs::create_dir(test_path.clone()) {
+                            Ok(_) => {},
+                            Err(e) => {
+                                println!("{}", e);
+                                println!("Error: folder(test) already Exists");
                                 panic!();
                             }
                         }
                         path.push("main.rs");
+                        test_path.push("main.rs");
                         let template = include_str!("../lang-template/rust/main.rs");
                         let mut f = BufWriter::new(fs::File::create(path).unwrap());
                         f.write(template.as_bytes()).unwrap();
+                        let mut test_f = BufWriter::new(fs::File::create(test_path).unwrap());
+                        test_f.write(template.as_bytes()).unwrap();
                     },
                     "c" | "cpp" => {
                         path.push("cpp");
                         path.push(args[3].as_str());
+                        test_path.push("cpp");
+                        test_path.push(args[3].as_str());
                         match fs::create_dir(path.clone()) {
                             Ok(_) => {},
                             Err(e) => {
                                 println!("{}", e);
-                                println!("Error: Folder already Exists");
+                                println!("Error: folder(src) already Exists");
+                                panic!();
+                            }
+                        }
+                        match fs::create_dir(test_path.clone()) {
+                            Ok(_) => {},
+                            Err(e) => {
+                                println!("{}", e);
+                                println!("Error: folder(test) already Exists");
                                 panic!();
                             }
                         }
                         path.push("main.cpp");
+                        test_path.push("main.cpp");
                         let template = include_str!("../lang-template/cpp/main.cpp");
                         let mut f = BufWriter::new(fs::File::create(path).unwrap());
                         f.write(template.as_bytes()).unwrap();
+                        let mut test_f = BufWriter::new(fs::File::create(test_path).unwrap());
+                        test_f.write(template.as_bytes()).unwrap();
                     },
                     _ => {
                         println!("Error: select valid language, rust `r` or cpp `c`");
