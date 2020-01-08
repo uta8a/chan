@@ -1,23 +1,56 @@
 use std::env;
 use std::io::{Write, BufWriter};
 use std::fs;
+use std::process::Command;
 
 fn main() {
-    let mut path = env::current_dir().unwrap();
-    path.pop();
-    if path.ends_with("uta8alib") == false {
-        println!("Error: cannot found directory uta8alib/");
-        panic!();
-    }
-    path.push("src");
+    
     let args:Vec<String> = env::args().collect();
     if args.len() == 2 {
-        // compile
+        // compile?
+        // wip
+        let file = args[1].as_str();
+        if file.ends_with("rs") {
+            let output = Command::new("rustc")
+                .arg("--color=always")
+                .arg("main.rs")
+                .output()
+                .expect("failed to execute rustc process");
+            let out = output.stdout;
+            let err = output.stderr;
+            println!("Out: {}", std::str::from_utf8(&out).unwrap());
+            println!("Err: {}", std::str::from_utf8(&err).unwrap());
+        }
+        if file.ends_with("cpp") {
+            let output = Command::new("gcc")
+                .arg("-std=gnu++1y")
+                .arg("-Wall")
+                .arg("-g")
+                .arg("-fdiagnostics-color=always")
+                .arg("-fsanitize=undefined")
+                .arg("-D_GLIBCXX_DEBUG")
+                .arg("-o")
+                .arg("main")
+                .arg("main.cpp")
+                .output()
+                .expect("failed to execute cpp process");
+            let out = output.stdout;
+            let err = output.stderr;
+            println!("Out: {}", std::str::from_utf8(&out).unwrap());
+            println!("Err: {}", std::str::from_utf8(&err).unwrap());
+        }
         
     }else if args.len() == 4 {
         // gen lib
         let gen = args[1].as_str();
         let lang = args[2].as_str();
+        let mut path = env::current_dir().unwrap();
+        path.pop();
+        if path.ends_with("uta8alib") == false {
+            println!("Error: cannot found directory uta8alib/");
+            panic!();
+        }
+        path.push("src");
         match gen {
             "g" | "generate" => {
                 match lang {
