@@ -45,7 +45,6 @@ fn main() {
         let gen = args[1].as_str();
         let lang = args[2].as_str();
         let mut path = env::current_dir().unwrap();
-        path.pop();
         if path.ends_with("uta8alib") == false {
             println!("Error: cannot found directory uta8alib/");
             panic!();
