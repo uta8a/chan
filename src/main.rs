@@ -89,7 +89,7 @@ fn main() {
                     "c" | "cpp" => {
                         let name = args[3].as_str();
                         let mut include_path = path.clone();
-                        include_path.push("include/lib.hpp");
+                        include_path.push("cpp/include/lib.hpp");
                         path.push("cpp");
                         path.push(name);
                         test_path.push("cpp");
