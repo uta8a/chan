@@ -1,6 +1,7 @@
 use std::env;
 use std::io::{Write, BufWriter};
 use std::fs;
+use std::fs::OpenOptions;
 use std::process::Command;
 
 fn main() {
@@ -56,10 +57,11 @@ fn main() {
             "g" | "generate" => {
                 match lang {
                     "r" | "rust" => {
+                        let name = args[3].as_str();
                         path.push("rust");
-                        path.push(args[3].as_str());
+                        path.push(name);
                         test_path.push("rust");
-                        test_path.push(args[3].as_str());
+                        test_path.push(name);
                         match fs::create_dir(path.clone()) {
                             Ok(_) => {},
                             Err(e) => {
@@ -85,10 +87,13 @@ fn main() {
                         test_f.write(template.as_bytes()).unwrap();
                     },
                     "c" | "cpp" => {
+                        let name = args[3].as_str();
+                        let mut include_path = path.clone();
+                        include_path.push("include/lib.hpp");
                         path.push("cpp");
-                        path.push(args[3].as_str());
+                        path.push(name);
                         test_path.push("cpp");
-                        test_path.push(args[3].as_str());
+                        test_path.push(name);
                         match fs::create_dir(path.clone()) {
                             Ok(_) => {},
                             Err(e) => {
@@ -105,8 +110,13 @@ fn main() {
                                 panic!();
                             }
                         }
-                        path.push("main.cpp");
+                        path.push("main.hpp");
                         test_path.push("main.cpp");
+                        let mut f = OpenOptions::new().append(true).write(true).open(include_path).unwrap();
+                        write!(&mut f, "{}", format!(
+                            r#"#include "../{}/main.hpp
+                            "#, name
+                        )).unwrap();
                         let template = include_str!("../lang-template/cpp/main.cpp");
                         let mut f = BufWriter::new(fs::File::create(path).unwrap());
                         f.write(template.as_bytes()).unwrap();
