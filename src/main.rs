@@ -113,8 +113,7 @@ fn main() {
                         path.push("main.hpp");
                         test_path.push("main.cpp");
                         let mut f = OpenOptions::new().append(true).write(true).open(include_path).unwrap();
-                        write!(&mut f, "{}", format!(r#"#include "../{}/main.hpp"
-                        "#, name).trim()).unwrap();
+                        write!(&mut f, "{}", concat!(format!(r#"#include "../{}/main.hpp""#, name), "\n")).unwrap();
                         let template = include_str!("../lang-template/cpp/main.cpp");
                         let mut f = BufWriter::new(fs::File::create(path).unwrap());
                         f.write(template.as_bytes()).unwrap();
