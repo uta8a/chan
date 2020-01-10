@@ -23,7 +23,7 @@ fn main() {
             println!("Err: {}", std::str::from_utf8(&err).unwrap());
         }
         if file.ends_with("cpp") {
-            let output = Command::new("gcc")
+            let output = Command::new("g++")
                 .arg("-std=gnu++1y")
                 .arg("-Wall")
                 .arg("-g")
